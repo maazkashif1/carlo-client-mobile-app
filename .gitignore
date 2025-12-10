@@ -1,0 +1,66 @@
+# Flutter/Dart/Pub related
+.dart_tool/
+.packages
+.pub/
+build/
+flutter_*.png
+
+# Dependency override files
+.pub-hide/
+
+# Android related
+**/android/**/gradle-wrapper.properties
+**/android/.gradle/
+**/android/captures/
+**/android/gradlew
+**/android/gradlew.bat
+**/android/local.properties
+**/android/app/debug
+**/android/app/profile
+**/android/app/release
+
+# iOS related
+**/ios/Flutter/.last_build_id
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/.symlinks/
+**/ios/Pods/
+**/ios/Runner/GeneratedPluginRegistrant.*
+
+# macOS related
+**/macos/Flutter/ephemeral/
+**/macos/Flutter/Flutter.podspec
+**/macos/Pods/
+
+# Linux related
+**/linux/Flutter/ephemeral/
+
+# Windows related
+**/windows/flutter/ephemeral/
+
+# Web related
+lib/generated_plugin_registrant.dart
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# VS Code related
+.vscode/
+
+# Files for the Flutter tool to enhance your IDE experience
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# Crashlytics (if using Firebase)
+appcenter-config.json
+
+# Misc
+*.log
+*.tmp
+*.swp
+.DS_Store
+*.lock
