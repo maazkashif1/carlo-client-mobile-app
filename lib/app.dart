@@ -15,7 +15,7 @@ class App extends StatelessWidget {
     return MultiBlocProvider(
       providers: [BlocProvider(create: (_) => sl<AuthBloc>())],
       child: MaterialApp(
-        title: 'Car Rental',
+        title: 'CarLo - Your Journey, Our Wheels',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
         onGenerateRoute: AppRouter.generateRoute,

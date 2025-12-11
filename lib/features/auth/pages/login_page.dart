@@ -2,11 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../presentation/blocs/auth_bloc.dart';
 import '../../../shared/themes/app_colors.dart';
-import '../../../shared/widgets/app_logo.dart';
-import '../../../shared/widgets/primary_button.dart';
-import '../../../shared/widgets/password_text_field.dart';
 import '../../profile/data/datasources/profile_local_data_source.dart';
-import '../domain/entities/user.dart';
 import 'signup_page.dart';
 import 'reset_password_page.dart';
 
@@ -23,7 +19,8 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _profileDataSource = ProfileLocalDataSource();
-  bool _rememberMe = false;
+  bool _rememberMe = true; // Default to checked
+  bool _obscurePassword = true;
 
   @override
   void dispose() {
@@ -35,61 +32,99 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: const Color(0xFFF5F5F5), // Light grey background
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
           child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Logo
-                const Padding(
-                  padding: EdgeInsets.only(top: 20, bottom: 40),
-                  child: AppLogo(),
-                ),
-
-                // Welcome back text
-                const Text(
-                  'Welcome Back',
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary,
+                const SizedBox(height: 20),
+                
+                // Logo - centered at top, matching onboarding screens (black logo)
+                Center(
+                  child: Image.asset(
+                    'assets/images/logo.png',
+                    width: 120,
+                    height: 120,
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        width: 120,
+                        height: 120,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Icon(Icons.directions_car, size: 60, color: Colors.grey),
+                      );
+                    },
                   ),
                 ),
 
                 const SizedBox(height: 40),
 
-                // Email field
-                TextFormField(
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(hintText: 'Email Address'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your email';
-                    }
-                    if (!value.contains('@')) {
-                      return 'Please enter a valid email';
-                    }
-                    return null;
-                  },
+                // Email/Phone field
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: const Color(0xFFE0E0E0)),
+                  ),
+                  child: TextFormField(
+                    controller: _emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: const InputDecoration(
+                      hintText: 'Email/Phone Number',
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your email or phone';
+                      }
+                      return null;
+                    },
+                  ),
                 ),
 
                 const SizedBox(height: 16),
 
                 // Password field
-                PasswordTextField(
-                  controller: _passwordController,
-                  hintText: 'Password',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your password';
-                    }
-                    return null;
-                  },
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: const Color(0xFFE0E0E0)),
+                  ),
+                  child: TextFormField(
+                    controller: _passwordController,
+                    obscureText: _obscurePassword,
+                    decoration: InputDecoration(
+                      hintText: 'Password',
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                          color: const Color(0xFF7F7F7F),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          });
+                        },
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your password';
+                      }
+                      return null;
+                    },
+                  ),
                 ),
 
                 const SizedBox(height: 16),
@@ -104,12 +139,13 @@ class _LoginPageState extends State<LoginPage> {
                           _rememberMe = value ?? false;
                         });
                       },
+                      activeColor: Colors.black,
                     ),
                     const Text(
-                      'Remember me',
+                      'Remember Me',
                       style: TextStyle(
                         fontSize: 14,
-                        color: AppColors.textSecondary,
+                        color: Colors.black87,
                       ),
                     ),
                     const Spacer(),
@@ -121,7 +157,17 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         );
                       },
-                      child: const Text('Forgot Password?'),
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                        minimumSize: const Size(0, 0),
+                      ),
+                      child: const Text(
+                        'Forgot Password',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Color(0xFF7F7F7F),
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -161,21 +207,83 @@ class _LoginPageState extends State<LoginPage> {
                     }
                   },
                   builder: (context, state) {
-                    return PrimaryButton(
-                      text: 'Login',
-                      isLoading: state is AuthLoading,
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          context.read<AuthBloc>().add(
-                            LoginEvent(
-                              email: _emailController.text,
-                              password: _passwordController.text,
-                            ),
-                          );
-                        }
-                      },
+                    return Container(
+                      width: double.infinity,
+                      height: 56,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF2C2C2C),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: TextButton(
+                        onPressed: state is AuthLoading ? null : () {
+                          if (_formKey.currentState!.validate()) {
+                            context.read<AuthBloc>().add(
+                              LoginEvent(
+                                email: _emailController.text,
+                                password: _passwordController.text,
+                              ),
+                            );
+                          }
+                        },
+                        style: TextButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: state is AuthLoading
+                            ? const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                ),
+                              )
+                            : const Text(
+                                'Login',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
+                      ),
                     );
                   },
+                ),
+
+                const SizedBox(height: 16),
+
+                // Sign up button
+                Container(
+                  width: double.infinity,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFEDEDED),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const SignupPage(),
+                        ),
+                      );
+                    },
+                    style: TextButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Text(
+                      'Sign up',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
                 ),
 
                 const SizedBox(height: 32),
@@ -183,7 +291,7 @@ class _LoginPageState extends State<LoginPage> {
                 // Or divider
                 Row(
                   children: [
-                    const Expanded(child: Divider(color: AppColors.stroke)),
+                    const Expanded(child: Divider(color: Color(0xFFD7D7D7))),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
@@ -194,28 +302,84 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ),
-                    const Expanded(child: Divider(color: AppColors.stroke)),
+                    const Expanded(child: Divider(color: Color(0xFFD7D7D7))),
                   ],
                 ),
 
-                const SizedBox(height: 32),
+                const SizedBox(height: 24),
 
-                // Social login buttons
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _buildSocialIcon('assets/icons/facebook.png', () {
-                      // TODO: Implement Facebook login
-                    }),
-                    const SizedBox(width: 20),
-                    _buildSocialIcon('assets/icons/google.png', () {
-                      // TODO: Implement Google login
-                    }),
-                    const SizedBox(width: 20),
-                    _buildSocialIcon('assets/icons/apple.png', () {
-                      // TODO: Implement Apple login
-                    }),
-                  ],
+                // Apple Pay button
+                Container(
+                  width: double.infinity,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFEDEDED),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: TextButton.icon(
+                    onPressed: () {
+                      // TODO: Implement Apple Pay
+                    },
+                    icon: Image.asset(
+                      'assets/icons/apple.png',
+                      width: 24,
+                      height: 24,
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Icon(Icons.apple, size: 24, color: Colors.black);
+                      },
+                    ),
+                    label: const Text(
+                      'Apple pay',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+                      ),
+                    ),
+                    style: TextButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                // Google Pay button
+                Container(
+                  width: double.infinity,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFEDEDED),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: TextButton.icon(
+                    onPressed: () {
+                      // TODO: Implement Google Pay
+                    },
+                    icon: Image.asset(
+                      'assets/icons/google.png',
+                      width: 24,
+                      height: 24,
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Icon(Icons.g_mobiledata, size: 24, color: Colors.black);
+                      },
+                    ),
+                    label: const Text(
+                      'Google Pay',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+                      ),
+                    ),
+                    style: TextButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
                 ),
 
                 const SizedBox(height: 32),
@@ -229,7 +393,7 @@ class _LoginPageState extends State<LoginPage> {
                         "Don't have an account? ",
                         style: TextStyle(
                           fontSize: 14,
-                          color: AppColors.textSecondary,
+                          color: Color(0xFF7F7F7F),
                         ),
                       ),
                       TextButton(
@@ -249,6 +413,7 @@ class _LoginPageState extends State<LoginPage> {
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
+                            color: Colors.black,
                           ),
                         ),
                       ),
@@ -263,25 +428,4 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildSocialIcon(String assetName, VoidCallback onTap) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        width: 60,
-        height: 60,
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          border: Border.all(color: AppColors.stroke),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Image.asset(
-          assetName,
-          width: 24,
-          height: 24,
-          errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
-        ),
-      ),
-    );
-  }
 }

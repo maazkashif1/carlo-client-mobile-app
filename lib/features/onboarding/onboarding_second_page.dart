@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../shared/themes/app_colors.dart';
-import 'onboarding_second_page.dart';
+import '../auth/pages/login_page.dart';
 
-/// Onboarding screen - shown only once on first app launch
-class OnboardingPage extends StatelessWidget {
-  const OnboardingPage({super.key});
+/// Second onboarding screen - shown after the first onboarding
+class OnboardingSecondPage extends StatelessWidget {
+  const OnboardingSecondPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,8 +13,8 @@ class OnboardingPage extends StatelessWidget {
         children: [
           // Background image - fills entire screen
           Positioned.fill(
-            child: Image(
-              image: AssetImage('assets/images/Background_img.png'),
+            child: Image.asset(
+              'assets/images/pexels-bradley-de-melo-742237632-267552391.png',
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
                 return Container(color: Colors.black);
@@ -23,7 +22,7 @@ class OnboardingPage extends StatelessWidget {
             ),
           ),
           
-          // Logo and Welcome to Carlo text - positioned at top
+          // Logo and Main title - positioned at top, matching first screen
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.only(top: 40.0),
@@ -31,10 +30,10 @@ class OnboardingPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Logo - on top, centered
+                  // Logo - on top, centered (matching first screen)
                   Center(
-                    child: Image(
-                      image: AssetImage('assets/images/logo white.png'),
+                    child: Image.asset(
+                      'assets/images/logo white.png',
                       width: 120,
                       height: 120,
                       fit: BoxFit.contain,
@@ -53,7 +52,7 @@ class OnboardingPage extends StatelessWidget {
                   
                   const SizedBox(height: 24),
                   
-                  // Welcome to Carlo text - below logo, left aligned
+                  // Main title - below logo, left aligned, positioned a bit above middle
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Padding(
@@ -62,37 +61,30 @@ class OnboardingPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            'Welcome to',
+                            'Lets Start',
                             style: TextStyle(
-                              fontSize: 42,
-                              fontWeight: FontWeight.w300,
+                              fontSize: 36,
+                              fontWeight: FontWeight.bold,
                               color: Colors.white,
-                              height: 1.1,
-                              letterSpacing: -0.5,
-                              shadows: [
-                                Shadow(
-                                  color: Colors.black54,
-                                  blurRadius: 8,
-                                  offset: Offset(0, 2),
-                                ),
-                              ],
+                              height: 1.2,
                             ),
                           ),
                           const Text(
-                            'Carlo',
+                            'A New Experience',
                             style: TextStyle(
-                              fontSize: 42,
-                              fontWeight: FontWeight.w700,
+                              fontSize: 36,
+                              fontWeight: FontWeight.bold,
                               color: Colors.white,
-                              height: 1.1,
-                              letterSpacing: -0.5,
-                              shadows: [
-                                Shadow(
-                                  color: Colors.black54,
-                                  blurRadius: 8,
-                                  offset: Offset(0, 2),
-                                ),
-                              ],
+                              height: 1.2,
+                            ),
+                          ),
+                          const Text(
+                            'With Car rental.',
+                            style: TextStyle(
+                              fontSize: 36,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              height: 1.2,
                             ),
                           ),
                         ],
@@ -100,6 +92,30 @@ class OnboardingPage extends StatelessWidget {
                     ),
                   ),
                 ],
+              ),
+            ),
+          ),
+          
+          // Descriptive paragraph - positioned above button, not covered
+          SafeArea(
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  bottom: 180.0, // Above button (40) + pagination (120) + spacing (20)
+                  left: 24.0,
+                  right: 24.0,
+                ),
+                child: const Text(
+                  'Discover your next adventure with Qent. we\'re here to\nprovide you with a seamless car rental experience.\nLet\'s get started on your journey.',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.white,
+                    height: 1.5,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
           ),
@@ -113,19 +129,19 @@ class OnboardingPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  width: 24,
+                  width: 8,
                   height: 8,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Colors.grey,
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
                 const SizedBox(width: 8),
                 Container(
-                  width: 8,
+                  width: 24,
                   height: 8,
                   decoration: BoxDecoration(
-                    color: Colors.grey,
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
@@ -143,12 +159,12 @@ class OnboardingPage extends StatelessWidget {
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => const OnboardingSecondPage(),
+                        builder: (context) => const LoginPage(),
                       ),
                     );
                   },
-                  child: Image(
-                    image: AssetImage('assets/images/Button.png'),
+                  child: Image.asset(
+                    'assets/images/Button.png',
                     fit: BoxFit.contain,
                     errorBuilder: (context, error, stackTrace) {
                       // Fallback button if image fails to load
@@ -181,3 +197,4 @@ class OnboardingPage extends StatelessWidget {
     );
   }
 }
+
